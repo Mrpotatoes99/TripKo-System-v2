@@ -1,28 +1,28 @@
 <?php
-$host = 'localhost';
-$dbname = 'tripko_db';
-$dbuser = 'root';
-$dbpass = '';
+require_once __DIR__ . '/config/Database.php';
+
+$database = new Database();
+$conn = $database->getConnection();
 
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $dbuser, $dbpass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $username = 'admin';
-    $password = 'admin123';
+    $username = "admin";
+    $password = "admin123"; // Change this to your desired admin password
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "UPDATE user SET password = :password WHERE username = :username AND user_type_id = 1";
+    // Update the admin user (assuming user_id = 1 is admin)
+    $sql = "UPDATE user SET username = ?, password = ? WHERE user_id = 1";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':password', $hash);
-    $stmt->bindParam(':username', $username);
+    $stmt->bind_param("ss", $username, $hash);
     
     if ($stmt->execute()) {
-        echo "Admin password reset successfully. You can now login with:<br>";
-        echo "Username: admin<br>";
-        echo "Password: admin123";
+        echo "Admin credentials have been reset successfully!<br>";
+        echo "Username: " . $username . "<br>";
+        echo "Password: " . $password . "<br>";
+    } else {
+        throw new Exception("Failed to reset admin credentials");
     }
-} catch(PDOException $e) {
+
+} catch(Exception $e) {
     echo "Error: " . $e->getMessage();
 }
 ?>

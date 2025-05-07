@@ -8,3 +8,37 @@ node_modules/
 .env
 /vendor/
 .phpunit.result.cache
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Dependencies and vendor directories
+/vendor/
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Database files
+*.sql
+*.sqlite

@@ -18,10 +18,13 @@ try {
 
     $sql = "
       SELECT
+        f.festival_id as id,
         f.name,
         f.description,
         f.date,
+        f.status,
         f.image_path,
+        f.town_id,
         t.town_name
       FROM festivals AS f
       LEFT JOIN towns AS t ON f.town_id = t.town_id

@@ -13,73 +13,117 @@ checkAdminSession();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../file_css/dashboard.css" />
+  <style>
+    canvas#transportChart {
+      width: 100% !important;
+      height: 100% !important;
+      position: absolute !important;
+      top: 0;
+      left: 0;
+    }
+  </style>
 </head>
 <body class="bg-white text-gray-900">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="flex flex-col justify-between bg-[#255D8A] w-64 p-6 text-white">
-      <div>
-        <div class="flex items-center gap-3 mb-10">
-          <div class="rounded-full border border-white p-2">
-            <i class="fas fa-user-circle text-3xl"></i>
+    <aside class="flex flex-col w-72 bg-gradient-to-b from-[#1d4ed8] to-[#1e40af] text-white">
+      <!-- Logo and Brand -->
+      <div class="p-6 border-b border-blue-700">
+        <div class="flex items-center space-x-4">
+          <div class="p-2 bg-white bg-opacity-10 rounded-lg">
+            <i class="fas fa-compass text-3xl"></i>
           </div>
-          <div class="font-semibold text-lg leading-tight">
-            TripKo<br />Pangasinan
+          <div>
+            <h1 class="text-2xl font-bold">TripKo</h1>
+            <p class="text-sm text-blue-200">Pangasinan Tourism</p>
           </div>
         </div>
-        <nav class="flex flex-col space-y-5 text-sm font-semibold">
-          <a href="dashboard.php" class="nav-link">
-            <i class="fas fa-home text-white text-lg"></i> Dashboard
-          </a>
-          <a href="tourist_spot.php" class="nav-link">
-            <i class="fas fa-umbrella-beach text-white text-lg"></i> Tourist Spots
-          </a>
-          <a href="itineraries.html" class="nav-link">
-            <i class="fas fa-map-marker-alt text-white text-lg"></i> Itineraries
-          </a>
-          <a href="festival.html" class="nav-link">
-            <i class="fas fa-carrot text-white text-lg"></i> Festivals
-          </a>
-          <a href="#" class="nav-link" onclick="toggleTransportDropdown(event)">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <i class="fas fa-bus text-white text-lg"></i>
-                <span class="ml-2">Transportation</span>
-              </div>
-              <i class="fas fa-chevron-down text-sm transition-transform" id="transportDropdownIcon"></i>
-            </div>
-          </a>
-          <div id="transportDropdown" class="hidden pl-8 mt-2 space-y-2">
-            <a href="terminal-locations.html" class="nav-link">
-              <i class="fas fa-map-marker-alt text-white text-lg"></i>
-              <span class="ml-2">Terminals</span>
-            </a>
-            <a href="terminal-routes.html" class="nav-link">
-              <i class="fas fa-route text-white text-lg"></i>  
-              <span class="ml-2">Routes & Types</span>
-            </a>
-          </div>
-          <a href="fare.html" class="nav-link">
-            <i class="fas fa-money-bill-wave text-white text-lg"></i> Fare
-          </a>
-          <a href="#" class="nav-link">
-            <i class="fas fa-user-friends text-white text-lg"></i> Users
-          </a>
-          <a href="../file_html/reports.php" class="nav-link active">
-            <i class="fas fa-chart-bar text-white text-lg"></i> Reports
-          </a>
-          <a href="../../tripko-backend/config/confirm_logout.php" class="nav-link">
-            <i class="fas fa-sign-out-alt text-white text-lg"></i> Sign Out
-          </a>
-        </nav>
       </div>
-      <div class="flex items-center gap-3 font-semibold">
-        <div class="rounded-full border border-white p-2">
-          <i class="fas fa-user-circle text-3xl"></i>
+
+      <!-- Navigation Menu -->
+      <nav class="flex-1 p-6 space-y-2 overflow-y-auto">
+        <!-- Dashboard -->
+        <a href="dashboard.php" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+          <i class="fas fa-home w-6"></i>
+          <span class="ml-3">Dashboard</span>
+        </a>
+
+        <!-- Tourism Section -->
+        <div class="mt-6">
+          <p class="px-4 text-xs font-semibold text-blue-300 uppercase">Tourism</p>
+          <div class="mt-3 space-y-2">
+            <a href="tourist_spot.php" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-umbrella-beach w-6"></i>
+              <span class="ml-3">Tourist Spots</span>
+            </a>
+            <a href="itineraries.html" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-map-marked-alt w-6"></i>
+              <span class="ml-3">Itineraries</span>
+            </a>
+            <a href="festival.html" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-calendar-alt w-6"></i>
+              <span class="ml-3">Festivals</span>
+            </a>
+          </div>
         </div>
-        <div>
-          Administrator<br />
-          <span class="text-sm">Administrator</span>
+
+        <!-- Transportation Section -->
+        <div class="mt-6">
+          <p class="px-4 text-xs font-semibold text-blue-300 uppercase">Transportation</p>
+          <div class="mt-3 space-y-2">
+            <button onclick="toggleTransportDropdown(event)" class="w-full flex items-center justify-between px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <div class="flex items-center">
+                <i class="fas fa-bus w-6"></i>
+                <span class="ml-3">Transport Info</span>
+              </div>
+              <i class="fas fa-chevron-down text-sm transition-transform duration-200" id="transportDropdownIcon"></i>
+            </button>
+            <div id="transportDropdown" class="hidden pl-4 space-y-2">
+              <a href="terminal-locations.html" class="flex items-center px-4 py-2 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg transition-colors group">
+                <i class="fas fa-map-marker-alt w-6"></i>
+                <span class="ml-3">Terminals</span>
+              </a>
+              <a href="terminal-routes.html" class="flex items-center px-4 py-2 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg transition-colors group">
+                <i class="fas fa-route w-6"></i>
+                <span class="ml-3">Routes & Types</span>
+              </a>
+              <a href="fare.html" class="flex items-center px-4 py-2 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg transition-colors group">
+                <i class="fas fa-money-bill-wave w-6"></i>
+                <span class="ml-3">Fare Rates</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Management Section -->
+        <div class="mt-6">
+          <p class="px-4 text-xs font-semibold text-blue-300 uppercase">Management</p>
+          <div class="mt-3 space-y-2">
+            <a href="users.php" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-users w-6"></i>
+              <span class="ml-3">Users</span>
+            </a>
+            <a href="reports.php" class="flex items-center px-4 py-3 text-white bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-chart-bar w-6"></i>
+              <span class="ml-3">Reports</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- User Profile -->
+      <div class="p-6 border-t border-blue-700">
+        <div class="flex items-center space-x-4">
+          <div class="p-2 bg-white bg-opacity-10 rounded-full">
+            <i class="fas fa-user-circle text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="font-medium">Administrator</h3>
+            <a href="../../tripko-backend/config/confirm_logout.php" class="text-sm text-blue-200 hover:text-white group flex items-center mt-1">
+              <i class="fas fa-sign-out-alt mr-2"></i>
+              <span>Sign Out</span>
+            </a>
+          </div>
         </div>
       </div>
     </aside>
@@ -449,22 +493,21 @@ checkAdminSession();
         initCharts();
       });
 
-      // Transport dropdown toggle
-      document.querySelector('[onclick="toggleTransportDropdown(event)"]')?.addEventListener('click', (event) => {
-        event.preventDefault();
-        const dropdown = document.getElementById('transportDropdown');
-        const icon = document.getElementById('transportDropdownIcon');
-        dropdown.classList.toggle('hidden');
-        icon.style.transform = dropdown.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-      });
-    });
+      function toggleTransportDropdown(event) {
+    event.preventDefault();
+    const dropdown = document.getElementById('transportDropdown');
+    const icon = document.getElementById('transportDropdownIcon');
+    
+    dropdown.classList.toggle('hidden');
+    icon.style.transform = dropdown.classList.contains('hidden') ? 'rotate(180deg)' : 'rotate(0deg)';
+}
 
     function toggleTransportDropdown(event) {
       event.preventDefault();
       const dropdown = document.getElementById('transportDropdown');
       const icon = document.getElementById('transportDropdownIcon');
       dropdown.classList.toggle('hidden');
-      icon.classList.toggle('rotate-180');
+      icon.style.transform = dropdown.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
     }
   </script>
 </body>

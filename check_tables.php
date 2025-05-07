@@ -47,4 +47,44 @@ foreach ($requiredTables as $table) {
     }
     echo "<br>------------------------<br>";
 }
+
+// Temporary code to check/create festivals table
+try {
+    $sql = "SHOW TABLES LIKE 'festivals'";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows > 0) {
+        echo "Festivals table exists.\n";
+        
+        $sql = "DESCRIBE festivals";
+        $result = $conn->query($sql);
+        
+        echo "\nTable structure:\n";
+        while ($row = $result->fetch_assoc()) {
+            echo $row['Field'] . " - " . $row['Type'] . " - " . ($row['Null'] === 'YES' ? 'NULL' : 'NOT NULL') . "\n";
+        }
+    } else {
+        echo "Festivals table does not exist.\n";
+        
+        // Create the festivals table
+        $sql = "CREATE TABLE festivals (
+            festival_id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            description TEXT,
+            date DATE NOT NULL,
+            town_id INT,
+            status ENUM('active', 'inactive') DEFAULT 'active',
+            image_path VARCHAR(255),
+            FOREIGN KEY (town_id) REFERENCES towns(town_id)
+        )";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo "\nFestivals table created successfully!";
+        } else {
+            echo "\nError creating table: " . $conn->error;
+        }
+    }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
 ?>

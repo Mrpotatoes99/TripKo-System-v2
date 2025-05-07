@@ -21,17 +21,18 @@ if ($username === '' || $password === '') {
 
 try {
     $hashed = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO user (username, password) VALUES (:username, :password)";
+    $sql = "INSERT INTO user (username, password) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':password', $hashed);
+    $stmt->bind_param("ss", $username, $hashed);
 
-    $stmt->execute();
-    header('Location: ../tripko-frontend/SignUp_LogIn_Form.php?registered=1');
+    if ($stmt->execute()) {
+        header('Location: ../tripko-frontend/SignUp_LogIn_Form.php?registered=1');
+    } else {
+        throw new Exception("Failed to register user: " . $stmt->error);
+    }
     exit();
-} catch (PDOException $e) {
-    
-    error_log('Registration error: ' . $e->getMessage());
+} catch (Exception $e) {
+    error_log("Registration error: " . $e->getMessage());
     header('Location: ../tripko-frontend/SignUp_LogIn_Form.php?error=system');
     exit();
 }

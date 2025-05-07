@@ -7,196 +7,336 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet" />
- <link rel="stylesheet" href="../file_css/dashboard.css" />
-
+  <link rel="stylesheet" href="../file_css/dashboard.css" />
+  <style>
+    canvas#transportChart {
+      width: 100% !important;
+      height: 100% !important;
+      position: absolute !important;
+      top: 0;
+      left: 0;
+    }
+  </style>
 </head>
 <body class="bg-white text-gray-900">
   <div class="flex min-h-screen">
- <!-- Sidebar -->
-<aside class="flex flex-col justify-between bg-[#255D8A] w-64 p-6 text-white">
-  <div>
-    <div class="flex items-center gap-3 mb-10">
-      <div class="rounded-full border border-white p-2">
-        <i class="fas fa-user-circle text-3xl"></i>
-      </div>
-      <div class="font-semibold text-lg leading-tight">
-        TripKo<br />Pangasinan
-      </div>
-    </div>
-    <nav class="flex flex-col space-y-5 text-sm font-semibold">
-      <a href="../file_html/dashboard.php" class="nav-link">
-        <i class="fas fa-home text-white text-lg"></i> Dashboard
-      </a>
-      <a href="../file_html/tourist_spot.php" class="nav-link">
-        <i class="fas fa-umbrella-beach text-white text-lg"></i> Tourist Spots
-      </a>
-      <a href="../file_html/itineraries.html" class="nav-link">
-        <i class="fas fa-map-marker-alt text-white text-lg"></i> Itineraries
-      </a>
-      <a href="../file_html/festival.html" class="nav-link">
-        <i class="fas fa-carrot text-white text-lg"></i> Festivals
-      </a>
-      <a href="#" class="nav-link active" onclick="toggleTransportDropdown(event)">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <i class="fas fa-bus text-white text-lg"></i>
-            <span class="ml-2">Transportation</span>
+    <!-- Sidebar -->
+    <aside class="flex flex-col w-72 bg-gradient-to-b from-[#1d4ed8] to-[#1e40af] text-white">
+      <!-- Logo and Brand -->
+      <div class="p-6 border-b border-blue-700">
+        <div class="flex items-center space-x-4">
+          <div class="p-2 bg-white bg-opacity-10 rounded-lg">
+            <i class="fas fa-compass text-3xl"></i>
           </div>
-          <i class="fas fa-chevron-down text-sm transition-transform" id="transportDropdownIcon"></i>
+          <div>
+            <h1 class="text-2xl font-bold">TripKo</h1>
+            <p class="text-sm text-blue-200">Pangasinan Tourism</p>
+          </div>
         </div>
-      </a>
-      <div id="transportDropdown" class="hidden pl-8 mt-2 space-y-2">
-        <a href="terminal-locations.html" class="nav-link">
-          <i class="fas fa-map-marker-alt text-white text-lg"></i>
-          <span class="ml-2">Terminals</span>
-        </a>
-        <a href="terminal-routes.html" class="nav-link">
-          <i class="fas fa-route text-white text-lg"></i>  
-          <span class="ml-2">Routes & Types</span>
-        </a>
       </div>
-      <a href="../file_html/fare.html" class="nav-link">
-        <i class="fas fa-money-bill-wave text-white text-lg"></i> Fare
-      </a>
-      <a href="#" class="nav-link">
-        <i class="fas fa-user-friends text-white text-lg"></i> Users
-      </a>
-      <a href="../file_html/reports.php" class="nav-link">
-        <i class="fas fa-chart-bar text-white text-lg"></i> Reports
-      </a>
-      <a href="../../tripko-backend/config/confirm_logout.php" class="nav-link">
-        <i class="fas fa-sign-out-alt text-white text-lg"></i> Sign Out
-      </a>
-    </nav>
-  </div>
-  <div class="flex items-center gap-3 font-semibold">
-    <div class="rounded-full border border-white p-2">
-      <i class="fas fa-user-circle text-3xl"></i>
-    </div>
-    <div>
-      Administrator<br />
-      <span class="text-sm">Administrator</span>
-    </div>
-  </div>
-</aside>
+
+      <!-- Navigation Menu -->
+      <nav class="flex-1 p-6 space-y-2 overflow-y-auto">
+        <!-- Dashboard -->
+        <a href="dashboard.php" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+          <i class="fas fa-home w-6"></i>
+          <span class="ml-3">Dashboard</span>
+        </a>
+
+        <!-- Tourism Section -->
+        <div class="mt-6">
+          <p class="px-4 text-xs font-semibold text-blue-300 uppercase">Tourism</p>
+          <div class="mt-3 space-y-2">
+            <a href="tourist_spot.php" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-umbrella-beach w-6"></i>
+              <span class="ml-3">Tourist Spots</span>
+            </a>
+            <a href="itineraries.html" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-map-marked-alt w-6"></i>
+              <span class="ml-3">Itineraries</span>
+            </a>
+            <a href="festival.html" class="flex items-center px-4 py-3 text-white bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-calendar-alt w-6"></i>
+              <span class="ml-3">Festivals</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Transportation Section -->
+        <div class="mt-6">
+          <p class="px-4 text-xs font-semibold text-blue-300 uppercase">Transportation</p>
+          <div class="mt-3 space-y-2">
+            <button onclick="toggleTransportDropdown(event)" class="w-full flex items-center justify-between px-4 py-3 text-white bg-blue-700 rounded-lg transition-colors group">
+                <div class="flex items-center">
+                    <i class="fas fa-bus w-6"></i>
+                    <span class="ml-3">Transport Info</span>
+                </div>
+                <i class="fas fa-chevron-down text-sm transition-transform duration-200 rotate-180" id="transportDropdownIcon"></i>
+            </button>
+            <div id="transportDropdown" class="pl-4 space-y-2">
+              <a href="terminal-locations.html" class="flex items-center px-4 py-2 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg transition-colors group">
+                <i class="fas fa-map-marker-alt w-6"></i>
+                <span class="ml-3">Terminals</span>
+              </a>
+              <a href="terminal-routes.html" class="flex items-center px-4 py-2 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg transition-colors group">
+                <i class="fas fa-route w-6"></i>
+                <span class="ml-3">Routes & Types</span>
+              </a>
+              <a href="fare.html" class="flex items-center px-4 py-2 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg transition-colors group">
+                <i class="fas fa-money-bill-wave w-6"></i>
+                <span class="ml-3">Fare Rates</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Management Section -->
+        <div class="mt-6">
+          <p class="px-4 text-xs font-semibold text-blue-300 uppercase">Management</p>
+          <div class="mt-3 space-y-2">
+            <a href="users.php" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-users w-6"></i>
+              <span class="ml-3">Users</span>
+            </a>
+            <a href="reports.php" class="flex items-center px-4 py-3 text-white hover:bg-blue-700 rounded-lg transition-colors group">
+              <i class="fas fa-chart-bar w-6"></i>
+              <span class="ml-3">Reports</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- User Profile -->
+      <div class="p-6 border-t border-blue-700">
+        <div class="flex items-center space-x-4">
+          <div class="p-2 bg-white bg-opacity-10 rounded-full">
+            <i class="fas fa-user-circle text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="font-medium">Administrator</h3>
+            <a href="../../tripko-backend/config/confirm_logout.php" class="text-sm text-blue-200 hover:text-white group flex items-center mt-1">
+              <i class="fas fa-sign-out-alt mr-2"></i>
+              <span>Sign Out</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
 
     <!-- Main content -->
     <main class="flex-1 bg-[#F3F1E7] p-6">
       <header class="flex items-center justify-between mb-6">
-        <span class="font-semibold text-xl">Festivals</span>
-        <button onclick="openModal()" class="bg-[#255D8A] text-white px-4 py-2 rounded-md hover:bg-[#1e4d70] transition-colors">
-          + Add new festival
-        </button>
+        <div class="flex items-center gap-3 text-gray-900 font-normal text-base">
+          <button aria-label="Menu" class="focus:outline-none">
+            <i class="fas fa-bars text-lg"></i>
+          </button>
+          <span>Festivals</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <div>
+            <input type="search" placeholder="Search" class="w-48 md:w-64 rounded-full border border-gray-400 bg-[#F3F1E7] py-1.5 px-4 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#255D8A]" />
+          </div>
+          <button aria-label="Notifications" class="text-black text-xl focus:outline-none">
+            <i class="fas fa-bell"></i>
+          </button>
+        </div>
       </header>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="festivalGrid">
-        <!-- Festival cards will go here -->
+
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="font-semibold text-xl">Festivals</h2>
+        <div class="flex gap-3">
+          <button onclick="openModal()" class="bg-[#255D8A] text-white px-4 py-2 rounded-md hover:bg-[#1e4d70] transition-colors">
+            + Add New Festival
+          </button>
+          <button onclick="toggleView()" id="viewToggleBtn" class="bg-[#255D8A] text-white px-4 py-2 rounded-md hover:bg-[#1e4d70] transition-colors">
+            <i class="fas fa-table"></i> Table View
+          </button>
+        </div>
+      </div>
+
+      <!-- Festivals grid -->
+      <div id="gridView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Festival cards will be dynamically added here -->
+      </div>
+
+      <!-- Festivals table -->
+      <div id="tableView" class="hidden">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <table class="w-full border-collapse">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Date</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Municipality</th>
+                <th class="border border-gray-300 px-4 py-2 text-center">Status</th>
+                <th class="border border-gray-300 px-4 py-2 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="festivalTableBody">
+              <!-- Festival rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   </div>
 
-  <!-- Add New Festival Modal (moved outside the flex container) -->
+  <!-- Add New Festival Modal -->
   <div id="addFestivalModal" class="fixed inset-0 hidden z-50">
     <div class="bg-black bg-opacity-50 absolute inset-0"></div>
     <div class="relative flex items-center justify-center min-h-screen p-4">
-      <div class="form-container bg-white relative z-10 p-8 rounded shadow-lg w-full max-w-lg">
+      <div class="form-container bg-white relative z-10 p-8 rounded shadow-lg w-full max-w-2xl">
         <button type="button" class="absolute right-4 top-4 text-gray-500 hover:text-gray-700" onclick="closeModal()">
           <i class="fas fa-times text-xl"></i>
         </button>
-        <form id="festivalForm">
+        <h2 class="form-title text-2xl font-bold mb-6">Add New Festival</h2>
+        <form id="festivalForm" enctype="multipart/form-data">
           <div class="form-group mb-4">
-            <label for="festival-name">Festival Name <span class="required">*</span></label>
+            <label for="festival-name">Festival Name <span class="text-red-500">*</span></label>
             <input type="text" id="festival-name" name="name" required class="w-full border rounded px-3 py-2" />
           </div>
-        
           <div class="form-group mb-4">
-            <label for="festival-description">Description <span class="required">*</span></label>
+            <label for="festival-description">Description <span class="text-red-500">*</span></label>
             <textarea id="festival-description" name="description" rows="4" required class="w-full border rounded px-3 py-2"></textarea>
           </div>
-        
           <div class="form-row flex gap-4 mb-4">
             <div class="form-group flex-1">
-              <label for="festival-date">Date <span class="required">*</span></label>
+              <label for="festival-date">Date <span class="text-red-500">*</span></label>
               <input type="date" id="festival-date" name="date" required class="w-full border rounded px-3 py-2" />
             </div>
             <div class="form-group flex-1">
-              <label for="municipality">Municipality <span class="required">*</span></label>
+              <label for="municipality">Municipality <span class="text-red-500">*</span></label>
               <select id="municipality" name="municipality" required class="w-full border rounded px-3 py-2">
                 <option value="" disabled selected>Loading...</option>
               </select>
             </div>
           </div>
-        
-          <div class="form-group upload-box mb-4">
-            <div class="upload-area cursor-pointer" id="uploadArea" onclick="document.getElementById('festivalImage').click()">
-              <i class="fas fa-plus-circle"></i>
-              <p>Upload Festival Images</p>
-              <span>PNG, JPG or JPEG</span>
+          <div class="form-group mb-6">
+            <div class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-[#255D8A] transition-colors">
+              <i class="fas fa-cloud-upload-alt text-3xl text-[#255D8A] mb-2"></i>
+              <p class="text-sm font-medium mb-1">Upload Image</p>
+              <span class="text-xs text-gray-500">PNG, JPG or JPEG (max. 5MB)</span>
               <input type="file" id="festivalImage" name="image" accept="image/png, image/jpeg" class="hidden" />
-              <div id="selectedFile" class="text-xs text-gray-600 mt-2"></div>
+              <div id="selectedFile" class="mt-2 text-sm text-gray-600"></div>
             </div>
           </div>
-        
-          <div class="form-buttons flex justify-end gap-2">
-            <button type="button" class="btn cancel px-4 py-2 rounded bg-gray-300" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn save px-4 py-2 rounded bg-[#255D8A] text-white">Save</button>
+          <div class="flex justify-end gap-4">
+            <button type="button" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="px-4 py-2 rounded bg-[#28a745] text-white hover:bg-[#218838]">Save</button>
           </div>
         </form>
-        
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Change Modal -->
+  <div id="statusModal" class="fixed inset-0 hidden z-50">
+    <div class="bg-black bg-opacity-50 absolute inset-0"></div>
+    <div class="relative flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white relative z-10 p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h3 class="text-xl font-bold mb-4">Change Status</h3>
+        <p class="mb-4">Current status: <span id="currentStatusText" class="font-semibold"></span></p>
+        <div class="space-y-3">
+          <button onclick="updateFestivalStatus('active')" 
+                  class="w-full py-2 px-4 rounded bg-green-600 text-white hover:bg-green-700 transition-colors">
+            Set Active
+          </button>
+          <button onclick="updateFestivalStatus('inactive')" 
+                  class="w-full py-2 px-4 rounded bg-red-600 text-white hover:bg-red-700 transition-colors">
+            Set Inactive
+          </button>
+          <button onclick="closeStatusModal()" 
+                  class="w-full py-2 px-4 rounded bg-gray-300 hover:bg-gray-400 transition-colors">
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuButton?.addEventListener('click', () => {
+      mobileMenu?.classList.toggle('hidden');
+    });
 
-function toggleTransportDropdown(event) {
-  event.preventDefault();
-  const dropdown = document.getElementById('transportDropdown');
-  const icon = document.getElementById('transportDropdownIcon');
-  dropdown.classList.toggle('hidden');
-  icon.classList.toggle('rotate-180');
-}
-    // Open/close modal
-    function openModal() {
-      document.getElementById('addFestivalModal').classList.remove('hidden');
+    // File upload handling
+    const uploadArea = document.querySelector('.upload-area');
+    if (uploadArea) {
+      uploadArea.addEventListener('click', () => {
+        document.getElementById('festivalImage')?.click();
+      });
     }
-    function closeModal() {
-      document.getElementById('addFestivalModal').classList.add('hidden');
+
+    // Helper function for image URLs
+    function getImageUrl(imagePath) {
+      if (!imagePath || imagePath === 'placeholder.jpg') {
+        return '../images/placeholder.jpg';
+      }
+      return `/TripKo-System/uploads/${imagePath}`;
     }
-  
-    // Fetch and display festivals
+
+    // All the rest of our functions
+    function toggleView() {
+      const gridView = document.getElementById('gridView');
+      const tableView = document.getElementById('tableView');
+      const viewToggleBtn = document.getElementById('viewToggleBtn');
+
+      if (gridView.classList.contains('hidden')) {
+        gridView.classList.remove('hidden');
+        tableView.classList.add('hidden');
+        viewToggleBtn.innerHTML = '<i class="fas fa-table"></i> Table View';
+      } else {
+        gridView.classList.add('hidden');
+        tableView.classList.remove('hidden');
+        viewToggleBtn.innerHTML = '<i class="fas fa-th"></i> Grid View';
+      }
+    }
+
     async function loadFestivals() {
-      const grid = document.getElementById('festivalGrid');
-  
+      const grid = document.getElementById('gridView');
+      const tableBody = document.getElementById('festivalTableBody');
+
       try {
+        console.log('Fetching festivals...');
         const res = await fetch('../../tripko-backend/api/festival/read.php');
         const data = await res.json();
-  
+        console.log('Festivals data:', data);
+
         if (!data.records || !Array.isArray(data.records) || data.records.length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full text-center py-8 text-gray-500">
-              <i class="fas fa-inbox text-4xl mb-3 block"></i>
-              <p>No festivals found</p>
-            </div>
-          `;
+          console.log('No festivals found or invalid data format');
+          const noDataMessage = '<div class="text-center py-8 text-gray-500"><i class="fas fa-inbox text-4xl mb-3 block"></i><p>No festivals found</p></div>';
+          grid.innerHTML = noDataMessage;
+          tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500">No festivals found</td></tr>';
           return;
         }
-  
-        grid.innerHTML = ''; // clear grid
+
+        console.log('Updating grid view with', data.records.length, 'festivals');
+        // Update grid view
+        grid.innerHTML = '';
         data.records.forEach(f => {
+          const imageUrl = getImageUrl(f.image_path);
+          console.log('Processing festival:', f.name, 'Image URL:', imageUrl);
           const card = document.createElement('div');
           card.className = 'bg-white rounded-lg shadow-md border border-gray-200 flex flex-col h-full group hover:shadow-xl transition-all duration-300 hover:-translate-y-1';
           card.innerHTML = `
             <div class="relative w-full h-56 bg-gray-100 flex items-center justify-center overflow-hidden">
-              ${f.image_path
-                ? `<img src="/TripKo-System/uploads/${f.image_path}"
-                       alt="${f.name}"
-                       class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110" />`
-                : `<span class="text-gray-400 text-6xl"><i class="fas fa-image"></i></span>`
+              ${imageUrl ? 
+                `<img src="${imageUrl}" 
+                      alt="${f.name}" 
+                      class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                      onerror="this.onerror=null; this.src='../images/placeholder.jpg';" />` :
+                `<span class="text-gray-400 text-6xl"><i class="fas fa-image"></i></span>`
               }
             </div>
             <div class="flex-1 flex flex-col p-5">
               <div class="mb-3">
                 <span class="inline-block bg-[#255D8A] text-white text-xs px-3 py-1 rounded-full font-semibold">${f.town_name || 'Unknown'}</span>
+                ${f.status ? `<span class="inline-block ml-2 ${f.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} text-xs px-3 py-1 rounded-full font-semibold">${f.status}</span>` : ''}
               </div>
               <h3 class="text-lg font-bold mb-2 text-[#255D8A] line-clamp-2">${f.name}</h3>
               <p class="text-sm text-gray-700 mb-3 line-clamp-3">${f.description}</p>
@@ -207,80 +347,284 @@ function toggleTransportDropdown(event) {
           `;
           grid.appendChild(card);
         });
+
+        // Update table view
+        tableBody.innerHTML = '';
+        data.records.forEach(f => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-gray-50';
+          row.innerHTML = `
+            <td class="border border-gray-300 px-4 py-2">${f.name}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              <div class="max-w-xs overflow-hidden text-ellipsis">
+                ${f.description}
+              </div>
+            </td>
+            <td class="border border-gray-300 px-4 py-2">${f.date}</td>
+            <td class="border border-gray-300 px-4 py-2">${f.town_name || 'Unknown'}</td>
+            <td class="border border-gray-300 px-4 py-2 text-center">
+              <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                f.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }">
+                ${f.status || 'Unknown'}
+              </span>
+            </td>
+            <td class="border border-gray-300 px-4 py-2 text-center">
+              <div class="flex justify-center gap-2">
+                <button onclick="editFestival(${f.id})" 
+                        class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                  Edit
+                </button>
+                <button onclick="toggleStatus(${f.id}, '${f.status}')" 
+                        class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                  Set Status
+                </button>
+              </div>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
       } catch (err) {
         console.error('Failed to load festivals:', err);
+        grid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500">Error loading festivals</div>';
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500">Error loading festivals</td></tr>';
       }
     }
-  
-    document.addEventListener('DOMContentLoaded', () => {
-  const fileInput = document.getElementById('festivalImage');
-  const selectedFile = document.getElementById('selectedFile');
-  if (fileInput && selectedFile) {
-    fileInput.addEventListener('change', function() {
-      if (this.files && this.files.length > 0) {
-        selectedFile.textContent = `Selected: ${this.files[0].name}`;
-      } else {
-        selectedFile.textContent = '';
-      }
-    });
-  }
 
-  // Dynamically load municipalities
-  fetch('../../tripko-backend/api/towns/read.php')
-    .then(res => res.json())
-    .then(data => {
-      console.log(data); // For debugging
-      const select = document.getElementById('municipality');
-      if (data.records && Array.isArray(data.records)) {
-        select.innerHTML = '<option value="" disabled selected>Select municipality</option>';
-        data.records.forEach(town => {
-          const opt = document.createElement('option');
-          opt.value = town.town_id;
-          opt.textContent = town.name;
-          select.appendChild(opt);
+    let currentFestivalId = null;
+
+    function openStatusModal(festivalId, currentStatus) {
+      currentFestivalId = festivalId;
+      const modal = document.getElementById('statusModal');
+      const statusText = document.getElementById('currentStatusText');
+      statusText.textContent = currentStatus;
+      statusText.className = 'font-semibold ' + 
+        (currentStatus === 'active' ? 'text-green-600' : 'text-red-600');
+      modal.classList.remove('hidden');
+    }
+
+    function closeStatusModal() {
+      document.getElementById('statusModal').classList.add('hidden');
+      currentFestivalId = null;
+    }
+
+    async function updateFestivalStatus(newStatus) {
+      if (!currentFestivalId) return;
+
+      try {
+        const res = await fetch('../../tripko-backend/api/festival/toggle_status.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            festival_id: currentFestivalId,
+            status: newStatus 
+          })
         });
-      } else {
-        select.innerHTML = '<option disabled selected>No data</option>';
+        
+        const data = await res.json();
+        if (data.success) {
+          alert(`Festival status updated to ${newStatus}`);
+          closeStatusModal();
+          loadFestivals();
+        } else {
+          throw new Error(data.message || 'Failed to update status');
+        }
+      } catch (err) {
+        console.error('Error updating status:', err);
+        alert('Error: ' + err.message);
       }
-    })
-    .catch(() => {
-      const select = document.getElementById('municipality');
-      select.innerHTML = '<option disabled selected>Error loading</option>';
+    }
+
+    // Update the existing toggleStatus function to use the modal
+    function toggleStatus(id, currentStatus) {
+      openStatusModal(id, currentStatus);
+    }
+
+    function openModal() {
+      document.getElementById('addFestivalModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('addFestivalModal').classList.add('hidden');
+      document.getElementById('festivalForm').reset();
+      document.getElementById('selectedFile').textContent = '';
+      const preview = document.querySelector('.upload-area .image-preview');
+      if (preview) {
+        preview.remove();
+      }
+    }
+
+    async function editFestival(id) {
+      try {
+        const response = await fetch(`../../tripko-backend/api/festival/read_single.php?id=${id}`);
+        const data = await response.json();
+        
+        if (data.success && data.festival) {
+          const festival = data.festival;
+          
+          // Populate form fields
+          const form = document.getElementById('festivalForm');
+          form.name.value = festival.name || '';
+          form.description.value = festival.description || '';
+          form.date.value = festival.date || '';
+          form.municipality.value = festival.town_id || '';
+          
+          // Add festival ID to form for update
+          let idInput = form.querySelector('input[name="festival_id"]');
+          if (!idInput) {
+            idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'festival_id';
+            form.appendChild(idInput);
+          }
+          idInput.value = id;
+          
+          // Show image preview if available
+          if (festival.image_path) {
+            const preview = document.createElement('div');
+            preview.className = 'image-preview mt-4';
+            preview.innerHTML = `
+              <img src="${getImageUrl(festival.image_path)}" 
+                   alt="Preview" 
+                   class="w-full h-48 object-cover rounded"
+                   onerror="this.onerror=null; this.src='../images/placeholder.jpg';" />
+            `;
+            
+            const uploadArea = document.querySelector('.upload-area');
+            const existingPreview = uploadArea.querySelector('.image-preview');
+            if (existingPreview) {
+              existingPreview.remove();
+            }
+            uploadArea.appendChild(preview);
+          }
+          
+          openModal();
+        } else {
+          throw new Error(data.message || 'Failed to load festival details');
+        }
+      } catch (error) {
+        console.error('Error loading festival:', error);
+        alert('Failed to load festival details');
+      }
+    }
+
+    // Update form submission to handle both create and edit
+    document.getElementById('festivalForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const isEdit = formData.has('festival_id');
+      
+      try {
+        const url = isEdit ? 
+          '../../tripko-backend/api/festival/update.php' : 
+          '../../tripko-backend/api/festival/create.php';
+
+        console.log('Form data being sent:', Object.fromEntries(formData));
+        const res = await fetch(url, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await res.json();
+        console.log('Server response:', result);
+        
+        if (result.success) {
+          alert(isEdit ? 'Festival updated successfully!' : 'Festival added successfully!');
+          closeModal();
+          loadFestivals();
+        } else {
+          throw new Error(result.message || `Failed to ${isEdit ? 'update' : 'add'} festival`);
+        }
+      } catch (err) {
+        console.error(isEdit ? 'Update error:' : 'Error submitting form:', err);
+        alert('Error: ' + err.message);
+      }
     });
 
-  // Form submit handler
-  const form = document.getElementById('festivalForm');
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const fileInput = form.querySelector('input[type="file"]');
-    if (fileInput && fileInput.files.length) {
-      formData.append('image', fileInput.files[0]);
-    }
-    try {
-      const res = await fetch('../../tripko-backend/api/festival/create.php', {
-        method: 'POST',
-        body: formData
-      });
-      const result = await res.json();
-      if (result.success) {
-        alert('Festival added!');
-        form.reset();
-        closeModal();
-        loadFestivals();
-      } else {
-        alert('Failed to add festival: ' + (result.message || 'Unknown error'));
-      }
-    } catch (err) {
-      alert('Error: ' + err.message);
-    }
-  });
+    // Initialize everything when the DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set up file input handling
+      const fileInput = document.getElementById('festivalImage');
+      const selectedFile = document.getElementById('selectedFile');
+      const uploadArea = document.querySelector('.upload-area');
 
-  // Initial load of festivals
-  loadFestivals();
+      fileInput?.addEventListener('change', function() {
+        const file = this.files?.[0];
+        if (file) {
+          selectedFile.textContent = `Selected: ${file.name}`;
+          
+          // Create image preview
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const preview = document.createElement('div');
+            preview.className = 'image-preview mt-4';
+            preview.innerHTML = `
+              <img src="${e.target.result}" 
+                   alt="Preview" 
+                   class="w-full h-48 object-cover rounded" />
+            `;
+            
+            // Remove any existing preview
+            const existingPreview = uploadArea.querySelector('.image-preview');
+            if (existingPreview) {
+              existingPreview.remove();
+            }
+            
+            uploadArea.appendChild(preview);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedFile.textContent = '';
+          const preview = uploadArea.querySelector('.image-preview');
+          if (preview) {
+            preview.remove();
+          }
+        }
+      });
+
+      // Load municipalities
+      fetch('../../tripko-backend/api/towns/read.php')
+        .then(res => res.json())
+        .then(data => {
+          const select = document.getElementById('municipality');
+          if (data.records?.length) {
+            select.innerHTML = '<option value="" disabled selected>Select municipality</option>' +
+              data.records.map(town => `<option value="${town.town_id}">${town.name}</option>`).join('');
+          } else {
+            select.innerHTML = '<option disabled selected>No data available</option>';
+          }
+        })
+        .catch(() => {
+          document.getElementById('municipality').innerHTML = '<option disabled selected>Error loading municipalities</option>';
+        });
+
+      // Load initial data
+      loadFestivals();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const transportDropdown = document.getElementById('transportDropdown');
+    const transportDropdownIcon = document.getElementById('transportDropdownIcon');
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#transportDropdown') && !e.target.closest('[onclick*="toggleTransportDropdown"]')) {
+            transportDropdown?.classList.add('hidden');
+            if (transportDropdownIcon) {
+                transportDropdownIcon.style.transform = 'rotate(0deg)';
+            }
+        }
+    });
 });
 
+function toggleTransportDropdown(event) {
+    event.preventDefault();
+    const dropdown = document.getElementById('transportDropdown');
+    const icon = document.getElementById('transportDropdownIcon');
+    
+    dropdown.classList.toggle('hidden');
+    icon.style.transform = dropdown.classList.contains('hidden') ? 'rotate(180deg)' : 'rotate(0deg)';
+}
   </script>
-  
 </body>
 </html>

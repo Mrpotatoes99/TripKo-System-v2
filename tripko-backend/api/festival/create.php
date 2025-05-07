@@ -20,6 +20,13 @@ try {
     $description = $_POST['description'] ?? '';
     $date = $_POST['date'] ?? '';
     $town_id = $_POST['municipality'] ?? '';
+    $status = $_POST['status'] ?? 'active';  // Default to active if not provided
+
+    if (empty($name) || empty($description) || empty($date) || empty($town_id)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Required fields missing']);
+        exit;
+    }
 
     // Handle file upload if present
     $image_path = null;
@@ -36,8 +43,8 @@ try {
     }
 
     // Insert into database using MySQLi prepared statement
-    $stmt = $conn->prepare("INSERT INTO festivals (name, description, date, town_id, image_path) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssis", $name, $description, $date, $town_id, $image_path);
+    $stmt = $conn->prepare("INSERT INTO festivals (name, description, date, town_id, image_path, status) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssis", $name, $description, $date, $town_id, $image_path, $status);
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {

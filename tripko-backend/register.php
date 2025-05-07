@@ -1,50 +1,79 @@
 <?php
 // tripko-backend/register.php
 
-// 1) Debug mode on
+// Debug mode
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// 2) Include your DB connection
+// Include database connection
 require_once __DIR__ . '/config/Database.php';
 
-// 3) Only handle POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ../tripko-frontend/SignUp_LogIn_Form.php');
+// Initialize database connection
+$database = new Database();
+$conn = $database->getConnection();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    // Validate input
+    if (empty($username) || empty($password)) {
+        header('Location: ../tripko-frontend/file_html/SignUp_LogIn_Form.php?error=empty');
+        exit();
+    }
+
+    try {
+        // Check if username already exists
+        $check_stmt = $conn->prepare("SELECT user_id FROM user WHERE username = ?");
+        $check_stmt->bind_param("s", $username);
+        $check_stmt->execute();
+        $result = $check_stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            header('Location: ../tripko-frontend/file_html/SignUp_LogIn_Form.php?error=exists');
+            exit();
+        }
+
+        // Begin transaction
+        $conn->begin_transaction();
+
+        // Hash password and insert new user with user_type_id = 2 (regular user) and active status
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO user (username, password, user_type_id, user_status_id) VALUES (?, ?, 2, 1)");
+        $stmt->bind_param("ss", $username, $hashed_password);
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to create user");
+        }
+
+        // Get the new user's ID
+        $user_id = $stmt->insert_id;
+        
+        // Create user profile
+        $profile_stmt = $conn->prepare("INSERT INTO user_profile (user_id) VALUES (?)");
+        $profile_stmt->bind_param("i", $user_id);
+        
+        if (!$profile_stmt->execute()) {
+            throw new Exception("Failed to create user profile");
+        }
+
+        // Commit the transaction
+        $conn->commit();
+            
+        header('Location: ../tripko-frontend/file_html/SignUp_LogIn_Form.php?success=1');
+        exit();
+
+    } catch (Exception $e) {
+        if ($conn->connect_error === null) {
+            $conn->rollback();
+        }
+        error_log("Registration error: " . $e->getMessage());
+        header('Location: ../tripko-frontend/file_html/SignUp_LogIn_Form.php?error=system');
+        exit();
+    }
+} else {
+    header('Location: ../tripko-frontend/file_html/SignUp_LogIn_Form.php');
     exit();
 }
-
-// 4) Grab & validate
-$username = trim($_POST['username'] ?? '');
-$password = trim($_POST['password'] ?? '');
-
-if ($username === '' || $password === '') {
-    // missing fields → back with error flag
-    header('Location: ../tripko-frontend/SignUp_LogIn_Form.php?error=empty');
-    exit();
-}
-
-try {
-    // 5) Hash & prepare
-    $hashed = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO user (username, password) VALUES (:username, :password)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':password', $hashed);
-
-    // **This was missing**! Actually run the query:
-    $stmt->execute();
-
-    // 6) Redirect back to login with success flag
-    header('Location: ../tripko-frontend/SignUp_LogIn_Form.php?registered=1');
-    exit();
-
-} catch (PDOException $e) {
-    // log it for yourself
-    error_log('Registration error: ' . $e->getMessage());
-
-    // 7) Redirect back with a generic error
-    header('Location: ../tripko-frontend/SignUp_LogIn_Form.php?error=system');
-    exit();
-}
+?>
